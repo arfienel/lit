@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<div class="form-control" style="width:300px;height:60px;margin:20px 0px 0px 5px">
+<form action="{% url 'newes:search_results' %}"  method="get">
+  <input name="search" type="text" placeholder="Поиск..." style="height:40px">
+  <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
+</form>
+    </div>
+
+<div style="">
+{% for gen in genress %}
+<div style="margin:10px 0px 0px 5px">
+<form action="{% url 'newes:filter_results' %}"  method="get">
+  <input type="submit" name="fil" value="{{gen}}" class="btn btn-outline-primary" style="width:300px;height:50px">
+</form></div>
+{% endfor %}
+
+</div>
+    {% if result %}
+
+<div style="margin-top:-410px">
+  <h1 style="text-align:center">Результаты поиска</h1>
+    {% for news in result %}
+
+        <div class="col-md-8 flex" style="margin:10px 10px 10px 340px;width:70%">
+          <div class="card flex-md-row mb-4 shadow-sm h-md">
+            <div class="card-body d-flex flex-column align-items-start">
+              <h3 class="mb-1">
+                <a class="text-dark" href="{% url 'newes:detail' news.id %}">{{ news.title }}</a>
+              </h3>
+              <p class="card-text text-dark mb-auto">Жанр: {{ news.genre1 }}<br>
+                Дата выхода {{ news.release_date }}</p>
+              <a href="{% url 'newes:detail' news.id %}">Continue reading</a>
+            </div>
+            <a href="{% url 'newes:detail' news.id %}"><img class="card-img-right flex-auto d-none d-lg-block" src="{{news.gm_photo.url}}" width="170" height="180"></a>
+          </div>
+
+            </div>
+        {% endfor %}
+{% else %}
+        <h1 style="text-align:center;margin-top:-410px">К сожалению ничего не нашлось :(</h1>
+    {% endif %}
+</div>
+    {% endblock %}

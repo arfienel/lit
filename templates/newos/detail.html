@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load counter %}
+{% block title %} {{news.title}} {% endblock %}
+
+{% block content %}
+<section>
+<img class="kartina" src="{{ news.gm_photo.url }}" width="400" height="400" style="float:right;margin:10px 10px 10px 0px;">
+        <!-- оценка наша -->
+    {% if score > 7 %}
+        <span class="bg-success fs-4 fw-bold " style="float:right;padding:60px 30px 60px 30px;margin-top:14px; text-align:center;">Наша оценка<br>{{ score }}</span>
+    {% elif score < 3.5 %}
+        <span class="bg-danger fs-4 fw-bold " style="float:right;padding:60px 30px 60px 30px;margin-top:14px; text-align:center;">Наша оценка<br>{{ score }}</span>
+    {% else %}
+        <span class="bg-warning fs-4 fw-bold " style="float:right;padding:60px 30px 60px 30px;margin-top:14px; text-align:center;">Наша оценка<br>{{ score }}</span>
+    {% endif %}
+    <!-- оценка с метакритики -->
+    {% if metascore > 70 %}
+        <span class="bg-success fs-4 fw-bold " style="float:right;padding:60px 49.5px 60px 49px;margin:215px -215px;text-align:center;">Metascore<br class="fs-1">{{ metascore }}</span>
+    {% elif metascore < 35 %}
+        <span class="bg-danger fs-4 fw-bold " style="float:right;padding:60px 49.5px 60px 49px;margin:215px -215px;text-align:center;">Metascore<br class="fs-1">{{ metascore }}</span>
+    {% else %}
+        <span class="bg-warning fs-4 fw-bold " style="float:right;padding:60px 49.5px 60px 49px;margin:215px -215px;text-align:center;">Metascore<br class="fs-1">{{ metascore }}</span>
+    {% endif %}
+    <!-- цена на стиме -->
+    {% if steam_free %}
+    <a href="{{ news.steam_url }}" class="bg-success fs-4 fw-bold" style="float:right;padding:10px 10px 10px 10px;margin-top:410px;margin-right:-48.5%">Скачать в стиме</a>
+    {% elif steam_discount %}
+    <a href="{{ news.steam_url }}" class="bg-success fs-4 fw-bold" style="float:right;padding:10px 10px 10px 10px;margin-top:410px;margin-right:-48.5%">купить в стиме за:<br><s>{{steam_orig}}</s> {{ steam_discount }} руб</a>
+    {% elif steam_price_final %}
+    <a href="{{ news.steam_url }}" class="bg-success fs-4 fw-bold" style="float:right;padding:10px 15px 15px 15px;margin-top:410px;margin-right:-48.5%">купить в стиме за:<br>{{steam_price_final}} руб</a>
+    {% else %}
+    <a class="bg-warning fs-4 fw-bold" style="float:right;padding:10px 10px 10px 10px;margin-top:410px;margin-right:-48.5%">Игры нет в стиме</a>
+
+
+    {% endif %}
+    <p class="fs-1 fw-bold">{{ news.title }}</p>
+    <p class="fs-3">Платформы: {{ news.platform }}</p>
+    <p class="fs-3">Жанры: {{ news.genre1 }}</p>
+    <p class="fs-3">Создатели: {{ news.creators }}</p>
+    {% if news.publisher %} <p class="fs-3">Издатели: {{ news.publisher }}</p> {% endif %}
+    <p class="fs-3">Дата релиза: {{ news.release_date }}</p>
+<iframe style="margin:10px 10px 10px 10px;" width="560" height="315" src="{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p>{{ news.text }}</p>
+    <br><br>
+
+{% if user.is_authenticated %}
+<form action="{% url 'newes:like' news.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" value="{{ news_id }}" class="btn btn-danger">Like</button>
+</form>
+    {% endif %}
+    <span class="bg-danger fs-4 fw-bold">Количество лайков - {{ news.total_likes }}</span><br>
+    <span class="bg-grey fs-4 fw-bold">Количество просмотров - {% page_hits %}</span>
+    <br><br>
+<p>Дата публикации статьи: {{ news.pub_date }}</p>
+    {% if user.is_authenticated %}
+<form action="{% url 'newes:comment' news.id %}" method="POST">
+    {% csrf_token %}
+    <textarea name="text" required="" placeholder="Ваш комментарий" cols="30" rows="10"></textarea><br>
+    <button type="submit">оставить комментарий</button>
+</form>
+    {% else %}
+    <p>Войдите или зарегистрируйтесь чтобы оставлять комментарии</p>
+    {% endif %}
+
+    <section>
+    <div class="container border">
+        <div class="row">
+            <div class="col-sm-5 col-md-10 col-12 pb-4">
+                <h1>Comments</h1>
+                {% for com in comment_list %}
+                <div class="comment mt-4 text-justify float-left" style="white-space:normal">
+                    <h4>{{ com.com_author }}</h4> <br>
+                    <p style="word-wrap:break-word">{{ com.com_text }}</p>
+                </div>
+                <hr>
+                {% endfor %}
+            </div></div></div>
+</section>
+</section>
+{% endblock %}

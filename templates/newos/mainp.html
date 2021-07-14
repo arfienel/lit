@@ -1,0 +1,68 @@
+
+{% extends 'base.html' %}
+{% load counter %}
+{% block title %} Статьи {% endblock %}
+
+{% block content %}
+
+
+    {% if news_list %}
+<div class="form-control" style="background-color:#f7f7f7;width:300px;height:60px;margin:20px 0px 0px 5px">
+<form action="{% url 'newes:search_results' %}"  method="get">
+  <input name="search" type="text" placeholder="Поиск..." style="height:40px">
+  <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
+</form>
+    </div>
+
+<div style="">
+{% for gen in genress %}
+<div style="margin:10px 0px 0px 5px">
+<form action="{% url 'newes:filter_results' %}"  method="get">
+  <input type="submit" name="fil" value="{{gen}}" class="btn btn-outline-primary" style="width:300px;height:50px">
+</form></div>
+{% endfor %}
+
+</div>
+<div style="margin-top:-430px">
+        {% for a in news_list %}
+
+          <div class="col-md-8 flex" style="margin:10px 10px 10px 340px;width:70%">
+          <div class="card flex-md-row mb-4 shadow-sm h-md" style="background-color:#f7f7f7" >
+            <div class="card-body d-flex flex-column align-items-start">
+              <h3 class="mb-1">
+                <a class="text-dark" href="{% url 'newes:detail' a.id %}">{{ a.title }}</a>
+              </h3>
+              <p class="card-text text-dark mb-auto">Жанр: {{ a.genre1 }}<br>
+                Дата выхода {{ a.release_date }}<br>
+                  Количество просмотров {% page_hits a.id %}</p>
+              <a href="{% url 'newes:detail' a.id %}">Continue reading</a>
+            </div>
+            <a href="{% url 'newes:detail' a.id %}"><img class="card-img-right flex-auto d-none d-lg-block" src="{{a.gm_photo.url}}" width="170" height="180"></a>
+          </div>
+
+            </div>
+        {% endfor %}
+</div>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1e-yrsOa3BckL3OhHLQvgc0b_W8dcnx5QOcO7Nb-fX5B98Om6Ga8QQ1i5lzFpvQFu2Mo&usqp=CAU" width="1px" height="0px">
+
+    {% else %}
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1e-yrsOa3BckL3OhHLQvgc0b_W8dcnx5QOcO7Nb-fX5B98Om6Ga8QQ1i5lzFpvQFu2Mo&usqp=CAU" width="1920px" height="1080px">
+    {% endif %}
+        <nav aria-label="Page navigation example">
+  <ul class="pagination" style="justify-content:center">
+      {% if news_list.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ news_list.previous_page_number }}">Предыдущая</a></li>
+      {% endif %}
+    {% for num in news_list.paginator.page_range %}
+    {% if news_list.number == num %}
+      <li class="page-item"><a class="page-link" href="?page={{num}}"><strong>{{num}}</strong></a></li>
+    {% elif num > news_list.number|add:'-3' and num < news_list.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{num}}">{{num}}</a></li>
+    {% endif %}
+      {% endfor %}
+      {% if news_list.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ news_list.next_page_number }}">Следующая</a></li>
+    {% endif %}
+  </ul>
+    </nav>
+{% endblock %}
