@@ -71,12 +71,16 @@ body,
 <body>
 <div class="wrapper">
 <header style="width:100%">
-      <div  class="navbar navbar-dark shadow-sm" style="background-color:black">
-        <div  class="container d-flex justify-content-between">
+      <div  class="navbar-dark shadow-sm navbar" style="background-color:black">
+        <div  class="container">
           <a href="{% url 'forum:main_page' %}" class="navbar-brand d-flex align-items-center">
-              <i class="fas fa-book" style="color:#2A3132"></i>
-            <strong style="margin-left:10px;color:#2A3132">тук-тук литературный клуб</strong></a>
-                        <span class="navbar-brand d-flex align-items-right" style="color:#2A3132">
+              <i class="fas fa-book" style="color:white"></i>
+            <strong style="margin-left:10px;color:white">литературный клуб</strong></a>
+            <nobr>
+            <a href="{% url 'forum:news_list' %}" style="margin:10px">Новости</a>
+            <a href="{% url 'forum:discussion_list' %}" style="margin:10px">Обсуждения</a>
+            <a href="{% url 'forum:book_list' %}" style="margin:10px">Книги</a>
+            </nobr>            <span class="d-flex" style="font-size:24px;color:white">
             {% if request.user.is_authenticated %}
             <p>Добро пожаловать, {{request.user.username}} | </p><a href="">Выйти</a>
             {% else %}

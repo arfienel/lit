@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %} Книги {% endblock %}
+
+{% block content %}
+{% for discussion in discussions %}
+<a href="{% url 'forum:discussion_detail' discussion.pk %}"><h1>{{ discussion.title }}</h1></a>
+    <h3>Автор - {{ discussion.author }}</h3>
+<h3>дата публикации - {{ discussion.pub_date }}</h3>
+<h3>likes - {{ discussion.likes }}</h3>
+<hr>
+{% endfor %}
+{% endblock %}

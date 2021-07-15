@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %} Книги {% endblock %}
+
+{% block content %}
+{% for new in news %}
+<a href="{% url 'forum:news_detail' new.pk %}"><h1>{{ new.title }}</h1>
+<img src="{{ new.image.url }}"></a>
+<h3>Автор - {{ new.author }}</h3>
+<h3>дата публикации - {{ new.pub_date }}</h3>
+<h3>likes - {{ new.likes }}</h3>
+<hr>
+{% endfor %}
+{% endblock %}

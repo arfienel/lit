@@ -1,4 +1,5 @@
 from django.db import models
+from taggit.managers import TaggableManager
 
 
 # добавить смайлики к тексту, видео, лайки дизлайки
@@ -9,7 +10,7 @@ class News(models.Model):
     likes = models.PositiveIntegerField('лайки', default=0)
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
     image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
-    video = models.FileField('видео')
+    # video = models.FileField('видео', default='None.jpg')
 
     class Meta:
         verbose_name = 'Новость'
@@ -61,7 +62,7 @@ class DiscussionsComments(models.Model):
 Награды книги
 Аннотация
 Дата публикации
-Добавить  в понравившиеся ( т.е. пользователь может добавить к себе книгу типо ему понравилось в свой профиль под тегом " Понравилось"
+Добавить в понравившиеся ( т.е. пользователь может добавить к себе книгу типо ему понравилось в свой профиль под тегом " Понравилось"
 Удобство чтения по главам ( т.е. можно спокойно выбрать главу и читать с неё"
 скольким пользователям понравилась и сколько посмотрели 
 обсуждения к этой книге
@@ -75,13 +76,18 @@ user контактные данные, отметка когда был в се
 
 
 class Book(models.Model):
-    post_author = models.CharField('автор поста книги', max_length=100)
-    book_author = models.CharField('автор книги', max_length=100)
+    post_author = models.CharField('автор поста книги', max_length=100, default='')
+    book_author = models.CharField('автор книги', max_length=100, default='')
+    image = models.ImageField('обложка книги',upload_to='photos/%y/%m/%d/', default='filler.jpg')
     title = models.CharField('название', max_length=200)
     text_example = models.TextField('отрывок книги')
+    age18 = models.BooleanField('есть контент для взрослых?', default=False)
+    ongoing = models.BooleanField('это произведение окончено?', default=False)
     price = models.PositiveIntegerField('цена')
-    pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
+    pub_date = models.DateTimeField('дата написания книги', auto_now_add=True)
     likes = models.PositiveIntegerField('лайки', default=0)
+    tags = TaggableManager()
+    # genre
 
     class Meta:
         verbose_name = 'Книга'

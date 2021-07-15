@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %} Книги {% endblock %}
+
+{% block content %}
+<h1>{{ news.title }}</h1>
+<img src="{{ news.image.url }}">
+<h3>Автор - {{ news.author }}</h3>
+<h3>дата публикации - {{ news.pub_date }}</h3>
+<hr>
+<h2>{{ news.text }}</h2>
+{% endblock %}
