@@ -1,5 +1,6 @@
 from django.db import models
 from taggit.managers import TaggableManager
+from django.contrib.auth.models import User
 
 
 # добавить смайлики к тексту, видео, лайки дизлайки
@@ -10,7 +11,10 @@ class News(models.Model):
     likes = models.PositiveIntegerField('лайки', default=0)
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
     image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
-    # video = models.FileField('видео', default='None.jpg')
+    likes = models.ManyToManyField(User, related_name='news_likes')
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     class Meta:
         verbose_name = 'Новость'
@@ -24,7 +28,6 @@ class NewsComments(models.Model):
     com_author = models.CharField('Автор', max_length=50)
     com_text = models.CharField('Комментарий', max_length=300)
     com_date = models.DateTimeField('дата комментария', auto_now_add=True)
-    likes = models.PositiveIntegerField('лайки', default=0)
 
     class Meta:
         verbose_name = 'Комментарий новости'
@@ -36,8 +39,10 @@ class Discussions(models.Model):
     title = models.CharField('заголовок', max_length=200)
     text = models.TextField('текст')
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
-    likes = models.PositiveIntegerField('лайки', default=0)
+    likes = models.ManyToManyField(User, related_name='discussion_likes')
 
+    def number_of_likes(self):
+        return self.likes.count()
 
     class Meta:
         verbose_name = 'Дискусия'
@@ -49,7 +54,6 @@ class DiscussionsComments(models.Model):
     com_author = models.CharField('автор', max_length=50)
     com_text = models.CharField('комментарий', max_length=300)
     com_date = models.DateTimeField('дата комментария', auto_now_add=True)
-    likes = models.PositiveIntegerField('лайки', default=0)
 
     class Meta:
         verbose_name = 'Коментарий дискусии'
@@ -85,9 +89,12 @@ class Book(models.Model):
     ongoing = models.BooleanField('это произведение окончено?', default=False)
     price = models.PositiveIntegerField('цена')
     pub_date = models.DateTimeField('дата написания книги', auto_now_add=True)
-    likes = models.PositiveIntegerField('лайки', default=0)
     tags = TaggableManager()
+    likes = models.ManyToManyField(User, related_name='book_likes')
     # genre
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     class Meta:
         verbose_name = 'Книга'
@@ -95,11 +102,10 @@ class Book(models.Model):
 
 
 class BookComments(models.Model):
-    com_discuss = models.ForeignKey(Book, on_delete=models.CASCADE)
+    com_book = models.ForeignKey(Book, on_delete=models.CASCADE)
     com_author = models.CharField('Автор', max_length=50)
     com_text = models.CharField('Комментарий', max_length=300)
     com_date = models.DateTimeField('дата комментария', auto_now_add=True)
-    likes = models.PositiveIntegerField('лайки', default=0)
 
     class Meta:
         verbose_name = 'Комментарий книги'

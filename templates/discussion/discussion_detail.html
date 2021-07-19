@@ -15,12 +15,30 @@
     <textarea name="comment" required="" placeholder="Ваш комментарий" cols="30" rows="10"></textarea><br>
     <button type="submit">оставить комментарий</button>
 </form>
-<form method="POST">
-    {% csrf_token %}
-
-    <button name="like" value="1" type="submit">like</button>
-</form>
     {% else %}
     <p>Войдите или зарегистрируйтесь чтобы оставлять комментарии</p>
     {% endif %}
+{% if user.is_authenticated %}
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if post_is_liked %}
+    <button type="submit" name="like" value="{{discussion.id}}" class="btn btn-info">Unlike</button>
+    {% else %}
+    <button type="submit" name="like" value="{{discussion.id}}" class="btn btn-info">Like</button>
+    {% endif %}
+  </form>
+{% else %}
+  <a class="btn btn-outline-info" href="">Log in to like this article!</a><br>
+{% endif %}
+<strong class="text-secondary">{{ discussion.number_of_likes }} Like{{ discussion.number_of_likes|pluralize }}</strong>
+<hr>
+<hr>
+<h1>Комментарии</h1>
+<hr>
+    {% for com in comments %}
+<h3>{{com.com_author}}</h3><h5>{{com.com_date}}</h5>
+<h2>{{com.com_text}}</h2>
+<hr>
+{% endfor %}
 {% endblock %}
