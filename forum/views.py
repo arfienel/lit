@@ -2,6 +2,17 @@ from django.shortcuts import render, redirect, reverse
 from .models import *
 
 
+# функция лайков, подставлям сюда модель, request и куда должно перекидывать потом
+def likes(model, request, redirection: str):
+    if request.method == "POST" and "like" in request.POST:
+        if model.likes.filter(id=request.user.id).exists():
+            model.likes.remove(request.user)
+            return redirect(reverse(redirection, args=[model.pk]))
+        else:
+            model.likes.add(request.user)
+            return redirect(reverse(redirection, args=[model.pk]))
+
+
 def main_page(request):
     return render(request, 'main.html', {})
 
@@ -13,7 +24,6 @@ def book_list(request):
 
 def book_detail(request, pk):
     book = Book.objects.get(pk=pk)
-
     # комментарии и их добавление
     if request.method == "POST" and 'comment' in request.POST:
         new_comment = BookComments(com_book=book, com_author=request.user,
@@ -23,17 +33,8 @@ def book_detail(request, pk):
     comments = BookComments.objects.filter(com_book=book)
 
     # лайки их удаление и добавление
-    if book.likes.filter(id=request.user.id).exists():
-        post_is_liked = True
-    else:
-        post_is_liked = False
-    if request.method == "POST" and "like" in request.POST:
-        if post_is_liked:
-            book.likes.remove(request.user)
-            return redirect(reverse('forum:book_detail', args=[book.pk]))
-        else:
-            book.likes.add(request.user)
-            return redirect(reverse('forum:book_detail', args=[book.pk]))
+    likes(book, request, 'forum:book_detail')
+    post_is_liked = book.likes.filter(id=request.user.id).exists()
     return render(request, 'book/book_detail.html', {'book': book, 'comments': comments,
                                                      'post_is_liked': post_is_liked})
 
@@ -52,22 +53,12 @@ def discussion_detail(request, pk):
                                           com_text=request.POST['comment'])
         new_comment.save()
         return redirect(reverse('forum:discussion_detail', args=[discussion.pk]))
-    elif request.method == "POST" and 'like' in request.POST:
-        pass
+
     comments = DiscussionsComments.objects.filter(com_discuss=discussion)
 
     # лайки их удаление и добавление
-    if discussion.likes.filter(id=request.user.id).exists():
-        post_is_liked = True
-    else:
-        post_is_liked = False
-    if request.method == "POST" and "like" in request.POST:
-        if post_is_liked:
-            discussion.likes.remove(request.user)
-            return redirect(reverse('forum:discussion_detail', args=[discussion.pk]))
-        else:
-            discussion.likes.add(request.user)
-            return redirect(reverse('forum:discussion_detail', args=[discussion.pk]))
+    likes(discussion, request, 'forum:discussion_detail')
+    post_is_liked = discussion.likes.filter(id=request.user.id).exists()
 
     return render(request, 'discussion/discussion_detail.html', {'discussion': discussion,
                                                                  'comments': comments, 'post_is_liked': post_is_liked})
@@ -87,22 +78,11 @@ def news_detail(request, pk):
                                    com_text=request.POST['comment'])
         new_comment.save()
         return redirect(reverse('forum:news_detail', args=[news.pk]))
-    elif request.method == "POST" and 'like' in request.POST:
-        pass
     comments = NewsComments.objects.filter(com_news=news)
 
     # лайки их удаление и добавление
-    if news.likes.filter(id=request.user.id).exists():
-        post_is_liked = True
-    else:
-        post_is_liked = False
-    if request.method == "POST" and "like" in request.POST:
-        if post_is_liked:
-            news.likes.remove(request.user)
-            return redirect(reverse('forum:news_detail', args=[news.pk]))
-        else:
-            news.likes.add(request.user)
-            return redirect(reverse('forum:news_detail', args=[news.pk]))
+    likes(news, request, 'forum:news_detail')
+    post_is_liked = news.likes.filter(id=request.user.id).exists()
 
     return render(request, 'news/news_detail.html', {'news': news, 'comments': comments,
                                                      'post_is_liked': post_is_liked})

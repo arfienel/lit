@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-
+from django.contrib.auth import views
 
 app_name = 'forum'
 urlpatterns = [
@@ -10,5 +10,6 @@ urlpatterns = [
     path('news/', news_list, name='news_list'),
     path('news/<int:pk>/', news_detail, name='news_detail'),
     path('discussions/', discussion_list, name='discussion_list'),
-    path('discussions/<int:pk>/', discussion_detail, name='discussion_detail')
+    path('discussions/<int:pk>/', discussion_detail, name='discussion_detail'),
+
 ]

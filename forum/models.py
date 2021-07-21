@@ -1,20 +1,23 @@
 from django.db import models
 from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 # добавить смайлики к тексту, видео, лайки дизлайки
 class News(models.Model):
-    author = models.CharField('автор', max_length=100)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField('Заголовок', max_length=200)
     text = models.TextField('текст новости')
-    likes = models.PositiveIntegerField('лайки', default=0)
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
     image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
     likes = models.ManyToManyField(User, related_name='news_likes')
 
     def number_of_likes(self):
         return self.likes.count()
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Новость'
@@ -25,7 +28,7 @@ class News(models.Model):
 
 class NewsComments(models.Model):
     com_news = models.ForeignKey(News, on_delete=models.CASCADE)
-    com_author = models.CharField('Автор', max_length=50)
+    com_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     com_text = models.CharField('Комментарий', max_length=300)
     com_date = models.DateTimeField('дата комментария', auto_now_add=True)
 
@@ -35,7 +38,7 @@ class NewsComments(models.Model):
 
 
 class Discussions(models.Model):
-    author = models.CharField('автор', max_length=100)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField('заголовок', max_length=200)
     text = models.TextField('текст')
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
@@ -44,6 +47,9 @@ class Discussions(models.Model):
     def number_of_likes(self):
         return self.likes.count()
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name = 'Дискусия'
         verbose_name_plural = 'Дискусии'
@@ -51,7 +57,7 @@ class Discussions(models.Model):
 
 class DiscussionsComments(models.Model):
     com_discuss = models.ForeignKey(Discussions, on_delete=models.CASCADE)
-    com_author = models.CharField('автор', max_length=50)
+    com_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     com_text = models.CharField('комментарий', max_length=300)
     com_date = models.DateTimeField('дата комментария', auto_now_add=True)
 
@@ -80,9 +86,9 @@ user контактные данные, отметка когда был в се
 
 
 class Book(models.Model):
-    post_author = models.CharField('автор поста книги', max_length=100, default='')
-    book_author = models.CharField('автор книги', max_length=100, default='')
-    image = models.ImageField('обложка книги',upload_to='photos/%y/%m/%d/', default='filler.jpg')
+    post_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book_author = models.CharField('автор книги', max_length=200, default='')
+    image = models.ImageField('обложка книги', upload_to='photos/%y/%m/%d/', default='filler.jpg')
     title = models.CharField('название', max_length=200)
     text_example = models.TextField('отрывок книги')
     age18 = models.BooleanField('есть контент для взрослых?', default=False)
@@ -92,6 +98,9 @@ class Book(models.Model):
     tags = TaggableManager()
     likes = models.ManyToManyField(User, related_name='book_likes')
     # genre
+
+    def __str__(self):
+        return self.title
 
     def number_of_likes(self):
         return self.likes.count()
@@ -103,7 +112,7 @@ class Book(models.Model):
 
 class BookComments(models.Model):
     com_book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    com_author = models.CharField('Автор', max_length=50)
+    com_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     com_text = models.CharField('Комментарий', max_length=300)
     com_date = models.DateTimeField('дата комментария', auto_now_add=True)
 
@@ -122,5 +131,8 @@ class PageHit(models.Model):
 
     def __str__(self):
         return self.url
+
+
+
 
 # Create your models here.
