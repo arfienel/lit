@@ -2,10 +2,16 @@
 {% block title %} Книги {% endblock %}
 
 {% block content %}
+<div class="form-control" style="background-color:#f7f7f7;width:300px;height:60px;margin:20px 0px 0px 5px">
+<form action="{% url 'forum:book_search' %}"  method="get">
+  <input name="search" type="text" placeholder="Поиск..." style="height:40px">
+  <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
+</form>
+    </div>
 {% for book in books %}
 <a href="{% url 'forum:book_detail' book.pk %}">
-<h1>{{ book.title }}</h1></a>
-<img src="{{ book.image.url }}">
+<h1>{{ book.title }}</h1>
+<img src="{{ book.image.url }}" style="width:170px;height:160px:"></a>
 <h3>Автор - {{ book.book_author }}</h3>
 <h3>дата публикации - {{ book.pub_date }}</h3>
 <h3>цена - {{ book.price }}</h3>

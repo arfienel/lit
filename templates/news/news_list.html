@@ -4,7 +4,7 @@
 {% block content %}
 {% for new in news %}
 <a href="{% url 'forum:news_detail' new.pk %}"><h1>{{ new.title }}</h1>
-<img src="{{ new.image.url }}"></a>
+<img src="{{ new.image.url }}" style="width:170px;height:160px:"></a>
 <h3>Автор - {{ new.author }}</h3>
 <h3>дата публикации - {{ new.pub_date }}</h3>
 <h3>likes - {{ new.likes }}</h3>

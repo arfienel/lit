@@ -13,6 +13,25 @@ def likes(model, request, redirection: str):
             return redirect(reverse(redirection, args=[model.pk]))
 
 
+def news_search(request):
+    quest = request.GET.get('search')
+    result = News.objects.filter(title__icontains=quest)
+    return render(request, 'news/search-results.html', {'result': result})
+
+
+def book_search(request):
+    quest = request.GET.get('search')
+    result = Book.objects.filter(title__icontains=quest)
+
+    return render(request, 'book/search-results.html', {'result': result})
+
+
+def discussion_search(request):
+    quest = request.GET.get('search')
+    result = Discussions.objects.filter(title__icontains=quest)
+    return render(request, 'discussion/search-results.html', {'result': result})
+
+
 def main_page(request):
     return render(request, 'main.html', {})
 

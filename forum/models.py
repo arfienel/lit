@@ -11,7 +11,7 @@ class News(models.Model):
     text = models.TextField('текст новости')
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
     image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
-    likes = models.ManyToManyField(User, related_name='news_likes')
+    likes = models.ManyToManyField(User, related_name='news_likes', blank=True)
 
     def number_of_likes(self):
         return self.likes.count()
@@ -39,10 +39,11 @@ class NewsComments(models.Model):
 
 class Discussions(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tags = TaggableManager()
     title = models.CharField('заголовок', max_length=200)
     text = models.TextField('текст')
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
-    likes = models.ManyToManyField(User, related_name='discussion_likes')
+    likes = models.ManyToManyField(User, related_name='discussion_likes', blank=True)
 
     def number_of_likes(self):
         return self.likes.count()
@@ -96,7 +97,7 @@ class Book(models.Model):
     price = models.PositiveIntegerField('цена')
     pub_date = models.DateTimeField('дата написания книги', auto_now_add=True)
     tags = TaggableManager()
-    likes = models.ManyToManyField(User, related_name='book_likes')
+    likes = models.ManyToManyField(User, related_name='book_likes', blank=True)
     # genre
 
     def __str__(self):
