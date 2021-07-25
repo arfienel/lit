@@ -10,8 +10,11 @@ urlpatterns = [
     path('books/search/', book_search, name='book_search'),
     path('news/', news_list, name='news_list'),
     path('news/<int:pk>/', news_detail, name='news_detail'),
+    path('news/search/', news_search, name='news_search'),
     path('discussions/', discussion_list, name='discussion_list'),
     path('discussions/<int:pk>/', discussion_detail, name='discussion_detail'),
+    path('discussions/search', discussion_search, name='discussion_search'),
 
-
+    path('profile/<int:pk>/', profile, name='profile'),
+    path('profile/update/', profile_update, name='profile_update'),
 ]

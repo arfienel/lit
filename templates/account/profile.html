@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user_profile.is_authenticated %}
+<a href="{% url 'forum:profile_update' %}">Update Profile</a> | <a href="{% url 'account_email' %}">Manage Email</a>  | <a href="{% url 'account_change_password' %}">Change Password</a> |
+<a href="{% url 'account_logout' %}">Logout</a>
+{% endif %}
+<p>Welcome, {{ user.name }}.</p>
+
+
+<h2>My Profile</h2>
+
+<ul>
+    <li>NickName: {{ user_profile.nickname }} </li>
+    <li>last_mod: {{ user_profile.mod_date }}</li>
+    {% if user.is_authenticated %}
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if post_is_liked %}
+    <button type="submit" name="like" value="{{user_profile.id}}" class="btn btn-info">Unlike</button>
+    {% else %}
+    <button type="submit" name="like" value="{{user_profile.id}}" class="btn btn-info">Like</button>
+    {% endif %}
+  </form>
+{% else %}
+  <a class="btn btn-outline-info" href="">Log in to like this article!</a><br>
+{% endif %}
+<strong class="text-secondary">{{ user_profile.number_of_likes }} Like{{ user_profile.number_of_likes|pluralize }}</strong>
+    <img src="{{ user_profile.profile_picture.url }}" style="width:400px; height:300px">
+</ul>
+
+
+{% endblock %}

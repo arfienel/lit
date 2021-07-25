@@ -15,6 +15,7 @@
 <h3>Автор - {{ book.book_author }}</h3>
 <h3>дата публикации - {{ book.pub_date }}</h3>
 <h3>цена - {{ book.price }}</h3>
+<h3>tags - {% for tag in book.tags.all %} {{tag.name}} {% endfor %}</h3>
 <hr>
 {% endfor %}
 {% endblock %}

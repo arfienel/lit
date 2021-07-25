@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+
+<div class="form-control" style="width:300px;height:60px;margin:20px 20px 20px 20px">
+<form action="{% url 'forum:book_search' %}"  method="get">
+  <input name="search" type="text" placeholder="Поиск..." style="height:40px">
+  <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
+</form>
+    </div>
+
+{% if result %}
+
+
+  <h1 style="text-align:center">Результаты поиска</h1>
+
+    {% for news in result %}
+<a href="{% url 'forum:news_detail' news.pk %}">
+<h1>{{ news.title }}</h1>
+<img src="{{ news.image.url }}" style="width:170px;height:160px:"></a>
+<h3>дата публикации - {{ news.pub_date }}</h3>
+<hr>
+{% endfor %}
+{% else %}
+        <h1 style="text-align:center;margin-top:-410px">К сожалению ничего не нашлось :(</h1>
+    {% endif %}
+
+    {% endblock %}

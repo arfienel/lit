@@ -2,6 +2,25 @@ from django.db import models
 from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
 from django.conf import settings
+from random import randint
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    nickname = models.CharField(max_length=50, default='')
+    profile_picture = models.ImageField('profile_picture', upload_to='profile_photos/%y/%m/%d/',
+                                        default='filler_images/filler.jpg')
+    mod_date = models.DateTimeField('Last modified', auto_now=True)
+    likes = models.ManyToManyField(User, related_name='profile_likes', blank=True)
+
+    def number_of_likes(self):
+        return self.likes.count()
+
+    class Meta:
+        verbose_name = 'User Profile'
+
+    def __str__(self):
+        return "{}'s profile".format(self.user.__str__())
 
 
 # добавить смайлики к тексту, видео, лайки дизлайки
@@ -89,7 +108,7 @@ user контактные данные, отметка когда был в се
 class Book(models.Model):
     post_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     book_author = models.CharField('автор книги', max_length=200, default='')
-    image = models.ImageField('обложка книги', upload_to='photos/%y/%m/%d/', default='filler.jpg')
+    image = models.ImageField('обложка книги', upload_to='photos/%y/%m/%d/', default='filler_images/filler.jpg')
     title = models.CharField('название', max_length=200)
     text_example = models.TextField('отрывок книги')
     age18 = models.BooleanField('есть контент для взрослых?', default=False)

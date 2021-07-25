@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponseRedirect
 from .models import *
+from .forms import *
+from itertools import chain
+from django.contrib.auth.decorators import login_required
 
 
-# функция лайков, подставлям сюда модель, request и куда должно перекидывать потом
+# функция лайков, подставлям сюда модель, request и url куда должно перекидывать потом
 def likes(model, request, redirection: str):
     if request.method == "POST" and "like" in request.POST:
         if model.likes.filter(id=request.user.id).exists():
@@ -13,17 +16,51 @@ def likes(model, request, redirection: str):
             return redirect(reverse(redirection, args=[model.pk]))
 
 
+@login_required
+def profile(request, pk):
+    user = get_object_or_404(UserProfile, user=get_object_or_404(User, pk=pk))
+    likes(user, request, 'forum:book_detail')
+    post_is_liked = user.likes.filter(id=request.user.id).exists()
+    return render(request, 'account/profile.html', {'user_profile': user, 'post_is_liked': post_is_liked})
+
+
+@login_required
+def profile_update(request):
+    user = request.user
+    user_profile = get_object_or_404(UserProfile, user=user)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST)
+
+        if form.is_valid():
+            user_profile.profile_picture = request.FILES['profile_picture']
+            user_profile.nickname = form.cleaned_data['nickname']
+            user_profile.save()
+            return HttpResponseRedirect(reverse('forum:profile', args=[user.pk]))
+    else:
+        default_data = {'profile_picture': user_profile.profile_picture}
+        form = ProfileForm(default_data)
+
+    return render(request, 'account/profile_update.html', {'form': form, 'user': user})
+
+
 def news_search(request):
     quest = request.GET.get('search')
-    result = News.objects.filter(title__icontains=quest)
-    return render(request, 'news/search-results.html', {'result': result})
+    title_result = News.objects.filter(title__icontains=quest)
+    date_result = News.objects.filter(pub_date__icontains=quest)
+    result_list = list(set(chain(title_result, date_result)))
+
+    return render(request, 'news/search-results.html', {'result': result_list})
 
 
 def book_search(request):
     quest = request.GET.get('search')
-    result = Book.objects.filter(title__icontains=quest)
+    title_result = Book.objects.filter(title__icontains=quest)
+    author_result = Book.objects.filter(book_author__icontains=quest)
+    tag_search = Book.objects.filter(tags__name__icontains=quest)
+    result_list = list(set(chain(title_result, author_result, tag_search)))
 
-    return render(request, 'book/search-results.html', {'result': result})
+    return render(request, 'book/search-results.html', {'result': result_list})
 
 
 def discussion_search(request):

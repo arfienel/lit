@@ -2,6 +2,12 @@
 {% block title %} Книги {% endblock %}
 
 {% block content %}
+<div class="form-control" style="background-color:#f7f7f7;width:300px;height:60px;margin:20px 0px 0px 5px">
+<form action="{% url 'forum:discussion_search' %}"  method="get">
+  <input name="search" type="text" placeholder="Поиск..." style="height:40px">
+  <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
+</form>
+    </div>
 {% for discussion in discussions %}
 <a href="{% url 'forum:discussion_detail' discussion.pk %}"><h1>{{ discussion.title }}</h1></a>
     <h3>Автор - {{ discussion.author }}</h3>
