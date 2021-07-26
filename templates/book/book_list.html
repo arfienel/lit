@@ -8,6 +8,8 @@
   <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
 </form>
     </div>
+<a href="{% url 'forum:add_book'%}"><button>Добавить книгу</button></a>
+
 {% for book in books %}
 <a href="{% url 'forum:book_detail' book.pk %}">
 <h1>{{ book.title }}</h1>

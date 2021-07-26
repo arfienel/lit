@@ -3,23 +3,14 @@ from .models import *
 from .forms import *
 from itertools import chain
 from django.contrib.auth.decorators import login_required
-
-
-# функция лайков, подставлям сюда модель, request и url куда должно перекидывать потом
-def likes(model, request, redirection: str):
-    if request.method == "POST" and "like" in request.POST:
-        if model.likes.filter(id=request.user.id).exists():
-            model.likes.remove(request.user)
-            return redirect(reverse(redirection, args=[model.pk]))
-        else:
-            model.likes.add(request.user)
-            return redirect(reverse(redirection, args=[model.pk]))
+from .services import *
+from datetime import datetime
 
 
 @login_required
 def profile(request, pk):
     user = get_object_or_404(UserProfile, user=get_object_or_404(User, pk=pk))
-    likes(user, request, 'forum:book_detail')
+    likes_func(user, request, 'forum:book_detail')
     post_is_liked = user.likes.filter(id=request.user.id).exists()
     return render(request, 'account/profile.html', {'user_profile': user, 'post_is_liked': post_is_liked})
 
@@ -42,6 +33,47 @@ def profile_update(request):
         form = ProfileForm(default_data)
 
     return render(request, 'account/profile_update.html', {'form': form, 'user': user})
+
+
+def add_news(request):
+    if request.method == "POST":
+        form = NewsForm(request.POST, request.FILES)
+        print(form.errors)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.image = request.FILES['image']
+            post.save()
+    else:
+        form = NewsForm()
+    return render(request, 'news/add_news.html', {'form': form})
+
+
+def add_discussion(request):
+    if request.method == "POST":
+        form = DiscussionForm(request.POST)
+        print(form.errors)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+    else:
+        form = DiscussionForm()
+    return render(request, 'discussion/add_discussion.html', {'form': form})
+
+
+def add_book(request):
+    if request.method == "POST":
+        form = BookForm(request.POST, request.FILES)
+        print(form.errors)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.post_author = request.user
+            post.image = request.FILES['image']
+            post.save()
+    else:
+        form = BookForm()
+    return render(request, 'book/add_book.html', {'form': form})
 
 
 def news_search(request):
@@ -80,16 +112,9 @@ def book_list(request):
 
 def book_detail(request, pk):
     book = Book.objects.get(pk=pk)
-    # комментарии и их добавление
-    if request.method == "POST" and 'comment' in request.POST:
-        new_comment = BookComments(com_book=book, com_author=request.user,
-                                   com_text=request.POST['comment'])
-        new_comment.save()
-        return redirect(reverse('forum:book_detail', args=[book.pk]))
+    comment_func(BookComments, book, request)
     comments = BookComments.objects.filter(com_book=book)
-
-    # лайки их удаление и добавление
-    likes(book, request, 'forum:book_detail')
+    likes_func(book, request, 'forum:book_detail')
     post_is_liked = book.likes.filter(id=request.user.id).exists()
     return render(request, 'book/book_detail.html', {'book': book, 'comments': comments,
                                                      'post_is_liked': post_is_liked})
@@ -103,17 +128,10 @@ def discussion_list(request):
 def discussion_detail(request, pk):
     discussion = Discussions.objects.get(pk=pk)
 
-    # комментарии и их добавление
-    if request.method == "POST" and 'comment' in request.POST:
-        new_comment = DiscussionsComments(com_discuss=discussion, com_author=request.user,
-                                          com_text=request.POST['comment'])
-        new_comment.save()
-        return redirect(reverse('forum:discussion_detail', args=[discussion.pk]))
-
+    comment_func(DiscussionsComments, discussion, request)
     comments = DiscussionsComments.objects.filter(com_discuss=discussion)
 
-    # лайки их удаление и добавление
-    likes(discussion, request, 'forum:discussion_detail')
+    likes_func(discussion, request, 'forum:discussion_detail')
     post_is_liked = discussion.likes.filter(id=request.user.id).exists()
 
     return render(request, 'discussion/discussion_detail.html', {'discussion': discussion,
@@ -127,17 +145,11 @@ def news_list(request):
 
 def news_detail(request, pk):
     news = News.objects.get(pk=pk)
-
-    # комментарии и их добавление
-    if request.method == "POST" and 'comment' in request.POST:
-        new_comment = NewsComments(com_news=news, com_author=request.user,
-                                   com_text=request.POST['comment'])
-        new_comment.save()
-        return redirect(reverse('forum:news_detail', args=[news.pk]))
+    comment_func(NewsComments, news, request)
     comments = NewsComments.objects.filter(com_news=news)
 
     # лайки их удаление и добавление
-    likes(news, request, 'forum:news_detail')
+    likes_func(news, request, 'forum:news_detail')
     post_is_liked = news.likes.filter(id=request.user.id).exists()
 
     return render(request, 'news/news_detail.html', {'news': news, 'comments': comments,

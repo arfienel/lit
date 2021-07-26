@@ -8,6 +8,7 @@
   <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
 </form>
     </div>
+<a href="{% url 'forum:add_news'%}"><button>Добавить новость</button></a>
 {% for new in news %}
 <a href="{% url 'forum:news_detail' new.pk %}"><h1>{{ new.title }}</h1>
 <img src="{{ new.image.url }}" style="width:170px;height:160px:"></a>

@@ -8,6 +8,8 @@
   <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
 </form>
     </div>
+<a href="{% url 'forum:add_discussion'%}"><button>Добавить обсуждение</button></a>
+
 {% for discussion in discussions %}
 <a href="{% url 'forum:discussion_detail' discussion.pk %}"><h1>{{ discussion.title }}</h1></a>
     <h3>Автор - {{ discussion.author }}</h3>
