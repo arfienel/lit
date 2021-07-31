@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %} Книги {% endblock %}
+
+{% block content %}
+<h1>{{ chapter.title }}</h1>
+<hr>
+<h2>{{ chapter.text|safe }}</h2>
+<hr>
+
+{% if user.is_authenticated %}
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if post_is_liked %}
+    <button type="submit" name="like" value="{{book.id}}" class="btn btn-info">Unlike</button>
+    {% else %}
+    <button type="submit" name="like" value="{{book.id}}" class="btn btn-info">Like</button>
+    {% endif %}
+  </form>
+{% else %}
+  <a class="btn btn-outline-info" href="">Log in to like this article!</a><br>
+{% endif %}
+<strong class="text-secondary">{{ book.number_of_likes }} Like{{ book.number_of_likes|pluralize }}</strong>
+
+
+{% endblock %}

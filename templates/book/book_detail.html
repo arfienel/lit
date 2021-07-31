@@ -8,11 +8,14 @@
 <h3>дата публикации - {{ book.pub_date }}</h3>
 <h3>цена - {{ book.price }}</h3>
 <hr>
-<h2>{{ book.text_example }}</h2>
+<h2>{{ book.text_example|safe }}</h2>
 <hr>
+{% for chap in chapters %}
+<a href="{% url 'forum:chapter_read' chap.pk %}">{{ chap.title }}</a>
+{% endfor %}
 {% if user.is_authenticated %}
 <form method="POST">
-    {% csrf_token %}
+    {% csrf_token %}    
     <textarea name="comment" required="" placeholder="Ваш комментарий" cols="30" rows="10"></textarea><br>
     <button type="submit">оставить комментарий</button>
 </form>

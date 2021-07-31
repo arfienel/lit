@@ -83,7 +83,7 @@ body,
             <a href="{% url 'forum:book_list' %}" style="margin:10px">Книги</a>
             </nobr>            <span class="d-flex" style="font-size:24px;color:white">
             {% if request.user.is_authenticated %}
-            <p>Добро пожаловать, {{request.user.username}} | </p><a href="{% url 'account_logout' %}">Выйти</a>
+            <a href="{% url 'forum:profile' request.user.pk %}"><p>Добро пожаловать, {{request.user.username}} | </p></a><a href="{% url 'account_logout' %}">Выйти</a>
             {% else %}
 
             <a href="{% url 'account_login' %}">Вход </a> | <a href="{% url 'account_signup' %}"> Регистрация</a>

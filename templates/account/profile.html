@@ -4,10 +4,11 @@
 <a href="{% url 'forum:profile_update' %}">Update Profile</a> | <a href="{% url 'account_email' %}">Manage Email</a>  | <a href="{% url 'account_change_password' %}">Change Password</a> |
 <a href="{% url 'account_logout' %}">Logout</a>
 {% endif %}
-<p>Welcome, {{ user.name }}.</p>
-
-
-<h2>My Profile</h2>
+{% if owner %}
+ты {{ user_profile.nickname }}
+{% else %}
+ты не {{ user_profile.nickname }}
+{% endif %}
 
 <ul>
     <li>NickName: {{ user_profile.nickname }} </li>

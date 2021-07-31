@@ -27,7 +27,14 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ('title', 'book_author', 'image', 'text_example', 'tags', 'age18', 'price', 'ongoing')
+        fields = ('title', 'image', 'tags', 'age18', 'price', 'ended',)
+
+
+class ChapterForm(forms.ModelForm):
+
+    class Meta:
+        model = BookChapter
+        fields = ('title', 'posted', 'image', 'text')
 
 
 class ProfileForm(forms.Form):

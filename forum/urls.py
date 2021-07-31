@@ -9,6 +9,8 @@ urlpatterns = [
     path('books/<int:pk>/', book_detail, name='book_detail'),
     path('books/search/', book_search, name='book_search'),
     path('books/add/', add_book, name='add_book'),
+    path('books/read_chapter/<int:pk>', chapter_read, name='chapter_read'),
+    path('books/<int:pk>/add_chapter', add_chapter, name='chapter_add'),
 
     path('news/', news_list, name='news_list'),
     path('news/<int:pk>/', news_detail, name='news_detail'),
@@ -22,4 +24,5 @@ urlpatterns = [
 
     path('profile/<int:pk>/', profile, name='profile'),
     path('profile/update/', profile_update, name='profile_update'),
+    path('profile/<int:pk>/your_books', profile_books, name='profile_books')
 ]

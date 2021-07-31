@@ -3,6 +3,7 @@ from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
 from django.conf import settings
 from random import randint
+from ckeditor.fields import RichTextField
 
 
 class UserProfile(models.Model):
@@ -27,7 +28,7 @@ class UserProfile(models.Model):
 class News(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField('Заголовок', max_length=200)
-    text = models.TextField('текст новости')
+    text = RichTextField(blank=True, null=True)
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
     image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
     likes = models.ManyToManyField(User, related_name='news_likes', blank=True)
@@ -85,7 +86,9 @@ class DiscussionsComments(models.Model):
         verbose_name = 'Коментарий дискусии'
         verbose_name_plural = 'Коментарии дискускии'
 
-'''Цикл ( т.е. находится  в общей вселенной книга с другими книгами или чё)
+
+'''
+Цикл ( т.е. находится  в общей вселенной книга с другими книгами или чё)
 Автор
 Название
 Отрывок книги ( будет как в бесплатных так и в платных книгах)
@@ -95,11 +98,9 @@ class DiscussionsComments(models.Model):
 Добавить в понравившиеся ( т.е. пользователь может добавить к себе книгу типо ему понравилось в свой профиль под тегом " Понравилось"
 Удобство чтения по главам ( т.е. можно спокойно выбрать главу и читать с неё"
 скольким пользователям понравилась и сколько посмотрели 
-обсуждения к этой книге
-комментарии
-ограничения по возрасту (не всегда)
-теги
-онгоинг или не онгионг
+
+обсуждения к этой книге - можно сделать путем поиска по тегам и названиям и выводить, а при нажатии перекидывать
+на страницу с поиском и результатми
 
 user контактные данные, отметка когда был в сети, соавторство, у статьи можно закрыть комментарии, сверху интерактивное меню по книгам
 '''
@@ -107,14 +108,13 @@ user контактные данные, отметка когда был в се
 
 class Book(models.Model):
     post_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    book_author = models.CharField('автор книги', max_length=200, default='')
     image = models.ImageField('обложка книги', upload_to='photos/%y/%m/%d/', default='filler_images/filler.jpg')
-    title = models.CharField('название', max_length=200)
-    text_example = models.TextField('отрывок книги')
+    title = models.CharField('название', max_length=200, unique=True)
+    #text_example = RichTextField(blank=True, null=True)
     age18 = models.BooleanField('есть контент для взрослых?', default=False)
-    ongoing = models.BooleanField('это произведение окончено?', default=False)
+    ended = models.BooleanField('это произведение окончено?', default=False)
     price = models.PositiveIntegerField('цена')
-    pub_date = models.DateTimeField('дата написания книги', auto_now_add=True)
+    start_date = models.DateTimeField('дата начала написания книги', auto_now_add=True)
     tags = TaggableManager()
     likes = models.ManyToManyField(User, related_name='book_likes', blank=True)
     # genre
@@ -128,6 +128,14 @@ class Book(models.Model):
     class Meta:
         verbose_name = 'Книга'
         verbose_name_plural = 'Книги'
+
+
+class BookChapter(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    title = models.CharField('Название', max_length=100, default='')
+    image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
+    text = RichTextField(blank=True, null=True)
+    posted = models.BooleanField('выпущено', default=False)
 
 
 class BookComments(models.Model):
@@ -151,8 +159,4 @@ class PageHit(models.Model):
 
     def __str__(self):
         return self.url
-
-
-
-
 # Create your models here.

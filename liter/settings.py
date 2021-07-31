@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.weibo',
-
+    'ckeditor',
 ]
 
 ACCOUNT_SIGNUP_FORM_CLASS = 'forum.forms.SignupForm'

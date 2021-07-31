@@ -10,9 +10,14 @@ from datetime import datetime
 @login_required
 def profile(request, pk):
     user = get_object_or_404(UserProfile, user=get_object_or_404(User, pk=pk))
+    if request.user.pk == pk:
+        owner = True
+    else:
+        owner = False
     likes_func(user, request, 'forum:book_detail')
     post_is_liked = user.likes.filter(id=request.user.id).exists()
-    return render(request, 'account/profile.html', {'user_profile': user, 'post_is_liked': post_is_liked})
+    return render(request, 'account/profile.html', {'user_profile': user, 'post_is_liked': post_is_liked,
+                                                    'owner': owner})
 
 
 @login_required
@@ -76,6 +81,28 @@ def add_book(request):
     return render(request, 'book/add_book.html', {'form': form})
 
 
+def add_chapter(request, pk):
+    if request.method == "POST":
+        form = ChapterForm(request.POST, request.FILES)
+        print(form.errors)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.image = request.FILES['image']
+            post.book = Book.objects.get(pk=pk)
+            post.save()
+    else:
+        form = ChapterForm()
+    return render(request, 'book/add_chapter.html', {'form': form})
+
+
+def edit_book(request, pk):
+    pass
+
+
+def edit_chapter(request, pk):
+    pass
+
+
 def news_search(request):
     quest = request.GET.get('search')
     title_result = News.objects.filter(title__icontains=quest)
@@ -91,7 +118,6 @@ def book_search(request):
     author_result = Book.objects.filter(book_author__icontains=quest)
     tag_search = Book.objects.filter(tags__name__icontains=quest)
     result_list = list(set(chain(title_result, author_result, tag_search)))
-
     return render(request, 'book/search-results.html', {'result': result_list})
 
 
@@ -110,14 +136,25 @@ def book_list(request):
     return render(request, 'book/book_list.html', {'books': books})
 
 
+def profile_books(request):
+    books = Book.objects.filter(post_author=request.user)
+    return render(request, 'account/')
+
+
 def book_detail(request, pk):
     book = Book.objects.get(pk=pk)
     comment_func(BookComments, book, request)
     comments = BookComments.objects.filter(com_book=book)
     likes_func(book, request, 'forum:book_detail')
     post_is_liked = book.likes.filter(id=request.user.id).exists()
+    chapters = BookChapter.objects.filter(book=book)
     return render(request, 'book/book_detail.html', {'book': book, 'comments': comments,
-                                                     'post_is_liked': post_is_liked})
+                                                     'post_is_liked': post_is_liked, 'chapters': chapters})
+
+
+def chapter_read(request, pk):
+    chapter = BookChapter.objects.get(pk=pk)
+    return render(request, 'book/book_read.html', {'chapter': chapter})
 
 
 def discussion_list(request):

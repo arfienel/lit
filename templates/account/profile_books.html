@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<a href="{% url 'forum:profile_update' %}">Update Profile</a> | <a href="{% url 'account_email' %}">Manage Email</a>  | <a href="{% url 'account_change_password' %}">Change Password</a> |
+<a href="{% url 'account_logout' %}">Logout</a>
+{% endif %}
+
+
+
+{% endblock %}
