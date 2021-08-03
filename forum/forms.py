@@ -27,7 +27,7 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ('title', 'image', 'tags', 'age18', 'price', 'ended',)
+        fields = ('title', 'image', 'tags', 'age18', 'price', 'ended')
 
 
 class ChapterForm(forms.ModelForm):

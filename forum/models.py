@@ -4,7 +4,10 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from random import randint
 from ckeditor.fields import RichTextField
+from django_resized import ResizedImageField
 
+
+# TODO библиотека пользователя
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -30,7 +33,7 @@ class News(models.Model):
     title = models.CharField('Заголовок', max_length=200)
     text = RichTextField(blank=True, null=True)
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
-    image = models.ImageField('изображение', upload_to='photos/%y/%m/%d/')
+    image = ResizedImageField('изображение', size=[250, 350], upload_to='photos/%y/%m/%d/')
     likes = models.ManyToManyField(User, related_name='news_likes', blank=True)
 
     def number_of_likes(self):
@@ -110,6 +113,7 @@ class Book(models.Model):
     post_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField('обложка книги', upload_to='photos/%y/%m/%d/', default='filler_images/filler.jpg')
     title = models.CharField('название', max_length=200, unique=True)
+    annotate = RichTextField(default='')
     #text_example = RichTextField(blank=True, null=True)
     age18 = models.BooleanField('есть контент для взрослых?', default=False)
     ended = models.BooleanField('это произведение окончено?', default=False)

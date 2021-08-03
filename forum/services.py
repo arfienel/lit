@@ -31,3 +31,10 @@ def comment_func(com_model, post_model, request):
             raise NameError('something went wrong in comment_func')
         new_comment.save()
         return redirect(reverse(f'forum:{tip}_detail', args=[post_model.pk]))
+
+
+def is_owner(request, pk):
+    if request.user.pk == pk:
+        return True
+    else:
+        return False

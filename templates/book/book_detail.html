@@ -2,16 +2,25 @@
 {% block title %} Книги {% endblock %}
 
 {% block content %}
-<h1>{{ book.title }}</h1>
-<img src="{{ book.image.url }}" style="width:370px;height:360px:">
-<h3>Автор - {{ book.book_author }}</h3>
+<div class="container" style="background-color:white; border-radius:1%; margin:2% 10% 2% 10%; box-shadow: 10px 10px 15px #7a7a7a;">
+<img src="{{ book.image.url }}" style=" margin:15px 10px 10px 10px;width:250px;height:350px; border-radius:10%; float:left">
+    <br>
+<div style=""><h3 style="font-weight:bold;">{{ book.title }}</h3>
+<a style="font-weight:bold;font-size:24px" href="{% url 'forum:profile' book.post_author.pk %}">{{ book.post_author }}</a>
+    <br>
+    <form action="{% url 'forum:book_search' %}" method="get">
+    <nobr>
+        {% for tag in book.tags.all %}<button type="submit" class="button" name="search" value="{{ tag.name }}">{{tag.name}}/</button>>{% endfor %}
+    </nobr>
+    </form>
+
 <h3>дата публикации - {{ book.pub_date }}</h3>
 <h3>цена - {{ book.price }}</h3>
-<hr>
+</div>
 <h2>{{ book.text_example|safe }}</h2>
-<hr>
+
 {% for chap in chapters %}
-<a href="{% url 'forum:chapter_read' chap.pk %}">{{ chap.title }}</a>
+<a href="{% url 'forum:read_chapter' chap.pk %}">{{ chap.title }}</a><br>
 {% endfor %}
 {% if user.is_authenticated %}
 <form method="POST">
@@ -37,7 +46,8 @@
   <a class="btn btn-outline-info" href="">Log in to like this article!</a><br>
 {% endif %}
 <strong class="text-secondary">{{ book.number_of_likes }} Like{{ book.number_of_likes|pluralize }}</strong>
-<hr>
+</div>
+
 <h1>Комментарии</h1>
 <hr>
     {% for com in comments %}

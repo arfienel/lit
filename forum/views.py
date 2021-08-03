@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponseRedirect
+from django.http import HttpResponseForbidden
 from .models import *
 from .forms import *
 from itertools import chain
@@ -10,10 +11,7 @@ from datetime import datetime
 @login_required
 def profile(request, pk):
     user = get_object_or_404(UserProfile, user=get_object_or_404(User, pk=pk))
-    if request.user.pk == pk:
-        owner = True
-    else:
-        owner = False
+    owner = is_owner(request, pk)
     likes_func(user, request, 'forum:book_detail')
     post_is_liked = user.likes.filter(id=request.user.id).exists()
     return render(request, 'account/profile.html', {'user_profile': user, 'post_is_liked': post_is_liked,
@@ -62,6 +60,7 @@ def add_discussion(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form.save_m2m()
     else:
         form = DiscussionForm()
     return render(request, 'discussion/add_discussion.html', {'form': form})
@@ -76,6 +75,8 @@ def add_book(request):
             post.post_author = request.user
             post.image = request.FILES['image']
             post.save()
+            form.save_m2m()
+            return redirect(reverse('forum:book_list'))
     else:
         form = BookForm()
     return render(request, 'book/add_book.html', {'form': form})
@@ -84,23 +85,38 @@ def add_book(request):
 def add_chapter(request, pk):
     if request.method == "POST":
         form = ChapterForm(request.POST, request.FILES)
-        print(form.errors)
         if form.is_valid():
             post = form.save(commit=False)
             post.image = request.FILES['image']
             post.book = Book.objects.get(pk=pk)
             post.save()
+            return redirect(reverse('forum:book_list'))
     else:
         form = ChapterForm()
     return render(request, 'book/add_chapter.html', {'form': form})
 
 
 def edit_book(request, pk):
-    pass
+    book = Book.objects.get(pk=pk)
+    owner = is_owner(request, book.post_author.pk)
+    if not owner:
+        return HttpResponseForbidden()
+    if request.method == "POST":
+        form = BookForm(request.POST, request.FILES, instance=book)
+        if form.is_valid():
+            form.save(commit=False)
+            return redirect(reverse('forum:book_detail', args=[pk]))
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'book/edit_book.html', {'book': book, 'form': form})
 
 
 def edit_chapter(request, pk):
-    pass
+    chapter = BookChapter.objects.get(pk=pk)
+    owner = is_owner(request, chapter.book.post_author.pk)
+    if not owner:
+        return HttpResponseForbidden()
+    return render(request, 'book/edit_chapter.html', {'chapter': chapter})
 
 
 def news_search(request):
@@ -115,9 +131,8 @@ def news_search(request):
 def book_search(request):
     quest = request.GET.get('search')
     title_result = Book.objects.filter(title__icontains=quest)
-    author_result = Book.objects.filter(book_author__icontains=quest)
     tag_search = Book.objects.filter(tags__name__icontains=quest)
-    result_list = list(set(chain(title_result, author_result, tag_search)))
+    result_list = list(set(chain(title_result, tag_search)))
     return render(request, 'book/search-results.html', {'result': result_list})
 
 
@@ -136,9 +151,10 @@ def book_list(request):
     return render(request, 'book/book_list.html', {'books': books})
 
 
-def profile_books(request):
+def profile_books(request, pk):
+    owner = is_owner(request, pk)
     books = Book.objects.filter(post_author=request.user)
-    return render(request, 'account/')
+    return render(request, 'account/profile_books.html', {'owner': owner, 'books': books})
 
 
 def book_detail(request, pk):
@@ -152,7 +168,7 @@ def book_detail(request, pk):
                                                      'post_is_liked': post_is_liked, 'chapters': chapters})
 
 
-def chapter_read(request, pk):
+def read_chapter(request, pk):
     chapter = BookChapter.objects.get(pk=pk)
     return render(request, 'book/book_read.html', {'chapter': chapter})
 
