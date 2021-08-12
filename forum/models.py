@@ -5,6 +5,7 @@ from django.conf import settings
 from random import randint
 from ckeditor.fields import RichTextField
 from django_resized import ResizedImageField
+from django.shortcuts import get_object_or_404
 
 
 # TODO библиотека пользователя
@@ -12,7 +13,7 @@ from django_resized import ResizedImageField
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     nickname = models.CharField(max_length=50, default='')
-    profile_picture = models.ImageField('profile_picture', upload_to='profile_photos/%y/%m/%d/',
+    profile_picture = ResizedImageField('profile_picture', upload_to='profile_photos/%y/%m/%d/',
                                         default='filler_images/filler.jpg')
     mod_date = models.DateTimeField('Last modified', auto_now=True)
     likes = models.ManyToManyField(User, related_name='profile_likes', blank=True)
@@ -32,8 +33,9 @@ class News(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField('Заголовок', max_length=200)
     text = RichTextField(blank=True, null=True)
+    views = models.PositiveBigIntegerField(default=0)
     pub_date = models.DateTimeField('дата публикации', auto_now_add=True)
-    image = ResizedImageField('изображение', size=[250, 350], upload_to='photos/%y/%m/%d/')
+    image = ResizedImageField('изображение', upload_to='photos/%y/%m/%d/')
     likes = models.ManyToManyField(User, related_name='news_likes', blank=True)
 
     def number_of_likes(self):
@@ -114,14 +116,81 @@ class Book(models.Model):
     image = models.ImageField('обложка книги', upload_to='photos/%y/%m/%d/', default='filler_images/filler.jpg')
     title = models.CharField('название', max_length=200, unique=True)
     annotate = RichTextField(default='')
-    #text_example = RichTextField(blank=True, null=True)
+    views = models.PositiveBigIntegerField(default=0)
     age18 = models.BooleanField('есть контент для взрослых?', default=False)
     ended = models.BooleanField('это произведение окончено?', default=False)
     price = models.PositiveIntegerField('цена')
-    start_date = models.DateTimeField('дата начала написания книги', auto_now_add=True)
+    pub_date = models.DateField('дата обновления книги', auto_now=True)
     tags = TaggableManager()
     likes = models.ManyToManyField(User, related_name='book_likes', blank=True)
-    # genre
+
+    genre_choices = [
+        ('detective', 'Детектив'),
+        ('his_detective', 'Исторический детектив'),
+        ('fantastic_detective', 'Фантастический детектив'),
+        ('spy_detective', 'Шпионский детектив'),
+        ('his_prose', 'Историческая проза'),
+        ('litRPG', 'ЛитРПГ'),
+        ('realRPG', 'РеалРПГ'),
+        ('love_roman', 'Любовные романы'),
+        ('his_love_roman', 'Исторический любовный роман'),
+        ('short_love_roman', 'Короткий любовный роман'),
+        ('love_fantastic', 'Любовная фантастика'),
+        ('love_fantasy', 'Любовное фэнтези'),
+        ('modern_love_roman', 'Современный любовный роман'),
+        ('mystic', 'Мистика'),
+        ('teen_prose', 'Подростковая проза'),
+        ('political_roman', 'Политический роман'),
+        ('fallout', 'Попаданцы'),
+        ('fallout_in_space', 'Попаданцы в космос'),
+        ('fallout_in_magical_world', 'Попаданцы в магические миры'),
+        ('fallout_in_time', 'Попаданцы во времени'),
+        ('poetry', 'Поэзия'),
+        ('adventure', 'Приключения'),
+        ('different', 'Разное'),
+        ('business_literature', 'Бизнес - литература'),
+        ('kid_literature', 'Детская литература'),
+        ('documentary_prose', 'Документальная проза'),
+        ('public', 'Публицистика'),
+        ('personal development', 'Развитие личности'),
+        ('fairy_tale', 'Сказка'),
+        ('modern_prose', 'Современная проза'),
+        ('thriller', 'Триллер'),
+        ('horror', 'Ужасы'),
+        ('fantastic', 'Фантастика'),
+        ('alternative_history', 'Альтернативная история'),
+        ('anti_utopia', 'Антиутопия'),
+        ('battle_fantastic', 'Боевая фантастика'),
+        ('heroes_fantastic', 'Героическая фантастика'),
+        ('cyberpunk', 'Киберпанк'),
+        ('cosmical_fantastic', 'Космическая фантастика'),
+        ('science_fantastic', 'Научная фантастика'),
+        ('post_apocalypse', 'Постапокалипсис'),
+        ('social_fantastic', 'Социальная фантастика'),
+        ('steampunk', 'Стимпанк'),
+        ('humor_fantastic', 'Юмористическая фантастика'),
+        ('fanfic', 'Фанфик'),
+        ('fantasy', 'Фэнтези'),
+        ('battle_fantasy', 'Боевое фэнтези'),
+        ('heroes_fantasy', 'Героическое фэнтези'),
+        ('town_fantasy', 'Городское фэнтези'),
+        ('historical_fantasy', 'Историческое фэнтези'),
+        ('dark_fantasy', 'Темное фэнтези'),
+        ('epic_fantasy', 'Эпическое фэнтези'),
+        ('humor_fantasy', 'Юмористическое фэнтези'),
+        ('erotic', 'Эротика'),
+        ('novel_erotic', 'Романтическая эротика'),
+        ('slash', 'Слэш'),
+        ('fem_slash', 'Фэмслеш'),
+        ('erotic_fantastic', 'Эротическая фантастика'),
+        ('erotic_fanfic', 'Эротический фанфик'),
+        ('erotic_fantasy', 'Эротическое фэнтези'),
+        ('humor', 'Юмор'),
+    ]
+
+    main_genre = models.CharField(max_length=70, choices=genre_choices)
+    add_genre_1 = models.CharField(max_length=70, choices=genre_choices)
+    add_genre_2 = models.CharField(max_length=70, choices=genre_choices)
 
     def __str__(self):
         return self.title

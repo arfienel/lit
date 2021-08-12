@@ -2,22 +2,45 @@
 {% block title %} Книги {% endblock %}
 
 {% block content %}
-<div class="form-control" style="background-color:#f7f7f7;width:300px;height:60px;margin:20px 0px 0px 5px">
-<form action="{% url 'forum:book_search' %}"  method="get">
+<div class="form-control" style="background-color:white;width:20%;height:200px;margin:10px;float:right">
+<form action="{% url 'forum:book_list' %}"  method="get">
   <input name="search" type="text" placeholder="Поиск..." style="height:40px">
+     <div class="form-row align-items-center">
+    <div class="col-auto my-1">
+      <label class="mr-sm-2" for="inlineFormCustomSelect">Сортировать по:</label>
+      <select name="sort" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        <option selected>...</option>
+        <option value="views">Просмотрам</option>
+        <option value="likes">Лайкам</option>
+        <option value="date_old">По дате - сначало новые</option>
+        <option value="date_new">По дате - сначало старые</option>
+      </select>
+    </div>
+  </div>
   <button type="submit" class="btn btn-outline-primary" style="height:40px;margin-top:-4px">Найти</button>
 </form>
-    </div>
-<a href="{% url 'forum:add_book'%}"><button>Добавить книгу</button></a>
+    <a href="{% url 'forum:book_add' %}"><button>Добавить книгу</button></a>
+    <form>
 
+</form>
+    </div>
+<br>
+
+
+<div style="background-color:white; border-radius:0%; margin:0% 24% 0% 5%; box-shadow: 10px 10px 15px grey">
 {% for book in books %}
+    <div style="margin:10px">
 <a href="{% url 'forum:book_detail' book.pk %}">
 <h1>{{ book.title }}</h1>
-<img src="{{ book.image.url }}" style="width:170px;height:160px:"></a>
-<h3>Автор - {{ book.book_author }}</h3>
+<img src="{{ book.image.url }}" style="width:170px;height:220px;float:left"></a>
+<h3>Автор - <a href="{% url 'forum:profile' book.post_author.pk %}" style="font-size:24px;text-decoration: none;color:black">{{ book.post_author }}</a></h3>
 <h3>дата публикации - {{ book.pub_date }}</h3>
 <h3>цена - {{ book.price }}</h3>
 <h3>tags - {% for tag in book.tags.all %} {{tag.name}} {% endfor %}</h3>
 <hr>
+        </div>
+
 {% endfor %}
-{% endblock %}
+</div>
+    {% endblock %}
+

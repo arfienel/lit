@@ -1,4 +1,6 @@
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, get_object_or_404
+from django.http import Http404
+from .models import *
 
 
 # функция лайков, подставлям сюда модель, request и url куда должно перекидывать потом
@@ -33,8 +35,16 @@ def comment_func(com_model, post_model, request):
         return redirect(reverse(f'forum:{tip}_detail', args=[post_model.pk]))
 
 
+# функция чтобы узнать пользователь владелец или нет
 def is_owner(request, pk):
     if request.user.pk == pk:
         return True
     else:
         return False
+
+
+def user_prof_find(pk):
+    try:
+        return get_object_or_404(UserProfile, pk=pk)
+    except Http404:
+        return None

@@ -6,8 +6,12 @@ cryptography==3.4.7
 defusedxml==0.7.1
 Django==3.2.5
 django-allauth==0.45.0
+django-ckeditor==6.1.0
 django-crispy-forms==1.12.0
+django-js-asset==1.2.2
+django-resized==0.3.11
 django-taggit==1.5.1
+gunicorn==20.1.0
 idna==3.2
 oauthlib==3.1.1
 Pillow==8.3.1

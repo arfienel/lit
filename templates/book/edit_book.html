@@ -2,12 +2,14 @@
 
 {% block content %}
 {% if user.is_authenticated %}
+<div style="background-color:white;margin:2% 5% 0% 10%;border-radius:2%; box-shadow: 5px 5px 15px grey;width:80%">
+    <div style="margin:2%">
     <h1>Edit post</h1>
     <form method="POST" class="post-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+    </form></div></div>
 {% else %}
 regaisya mraz
 {% endif %}

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
+    {% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/myc.css' %}">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/album/">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <meta charset="UTF-8">
@@ -10,9 +13,21 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+<link rel="mask-icon" type="" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/1.0.0/flickity.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script><script>(function(){class RuffleMimeType{constructor(a,b,c){this.type=a,this.description=b,this.suffixes=c}}class RuffleMimeTypeArray{constructor(a){this.__mimetypes=[],this.__named_mimetypes={};for(let b of a)this.install(b)}install(a){let b=this.__mimetypes.length;this.__mimetypes.push(a),this.__named_mimetypes[a.type]=a,this[a.type]=a,this[b]=a}item(a){return this.__mimetypes[a]}namedItem(a){return this.__named_mimetypes[a]}get length(){return this.__mimetypes.length}}class RufflePlugin extends RuffleMimeTypeArray{constructor(a,b,c,d){super(d),this.name=a,this.description=b,this.filename=c}install(a){a.enabledPlugin||(a.enabledPlugin=this),super.install(a)}}class RufflePluginArray{constructor(a){this.__plugins=[],this.__named_plugins={};for(let b of a)this.install(b)}install(a){let b=this.__plugins.length;this.__plugins.push(a),this.__named_plugins[a.name]=a,this[a.name]=a,this[b]=a}item(a){return this.__plugins[a]}namedItem(a){return this.__named_plugins[a]}get length(){return this.__plugins.length}}const FLASH_PLUGIN=new RufflePlugin("Shockwave Flash","Shockwave Flash 32.0 r0","ruffle.js",[new RuffleMimeType("application/futuresplash","Shockwave Flash","spl"),new RuffleMimeType("application/x-shockwave-flash","Shockwave Flash","swf"),new RuffleMimeType("application/x-shockwave-flash2-preview","Shockwave Flash","swf"),new RuffleMimeType("application/vnd.adobe.flash-movie","Shockwave Flash","swf")]);function install_plugin(a){navigator.plugins.install||Object.defineProperty(navigator,"plugins",{value:new RufflePluginArray(navigator.plugins),writable:!1}),navigator.plugins.install(a),0<a.length&&!navigator.mimeTypes.install&&Object.defineProperty(navigator,"mimeTypes",{value:new RuffleMimeTypeArray(navigator.mimeTypes),writable:!1});for(var b=0;b<a.length;b+=1)navigator.mimeTypes.install(a[b])}install_plugin(FLASH_PLUGIN);})();</script><script src="chrome-extension://cldafiijegbpmandjcokpenfnihhpjnd/dist/ruffle.js?uniqueMessageSuffix=37706844793"></script>
+
+
     <title>{% block title %} Мой сайт {% endblock %}</title>
 <style>
 /*
@@ -21,227 +36,11 @@
 #2A3132 - черный
 
 */
-
-    body {
-    color:#2A3132;
-      display: grid;
-  grid-template-rows: 1fr auto;
-    background: #bababa;
-    height: 100%;
-    font-family: 'Roboto', sans-serif;
-    }
-
-    prova {margin:10px  }
-   figure {
-    background: #5f6a72; /* Цвет фона */
-    padding: 10px; /* Поля вокруг */
-    display: block; /* Блочный элемент */
-    width: 160px; /* Ширина */
-    float: left; /* Блоки выстраиваются по горизонтали */
-    margin: 10px 10px 10px 10px; /* Отступы */
-    text-align: center; /* Выравнивание по центру */
-   }
-   figcaption {
-    color: #fff; /* Цвет текста */
-   }
-
-   .kartina {
-   float:left;
-   border: 3px solid black;
-    margin:10px 10px 10px 50px;
-    vertical-align:top;
-   }
-
-
-   a {
-    text-decoration: none;
-   }
-* {
-  margin: 0;
-  padding: 0;
-}
-html,
-body,
-.wrapper {
-  height: 93.8%;
-}
-.content {
-  box-sizing: border-box;
-  min-height: 100%;
-  padding-bottom: 4.68%;
-}
-.footer {
-  position: absolute
-  height: 0%;
-  margin-top: 0%;
-}
-
-.button-новости-книги {
-  text-decoration: none;
-  display: inline-block;
-  width: 45%;
-  height: 0%;
-  line-height: 380%;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 75%;
-  text-transform: uppercase;
-  text-align: center;
-  letter-spacing: 1px;
-  font-weight: 600;
-  color: white;
-  background: black;
-  transition: .3s;
-}
-.button-новости-книги:hover {
-  background: white;
-  color: black;
-}
-
-    .button-вход {
-      text-decoration: none;
-      display: inline-block;
-      width: 45%;
-      height: 0%;
-      line-height: 380%;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 52%;
-      text-transform: uppercase;
-      text-align: center;
-      letter-spacing: 1px;
-      font-weight: 600;
-      color: white;
-      background: black;
-      transition: .3s;
-    }
-    .button-вход:hover {
-      background-color: white;
-      color: black;
-    }
-
-        .button-main-обсуждения {
-          text-decoration: none;
-          display: inline-block;
-          width: 100%;
-          height: 0%;
-          line-height: 380%;
-          font-family: 'Montserrat', sans-serif;
-          font-size: 78%;
-          text-transform: uppercase;
-          text-align: center;
-          letter-spacing: 1px;
-          font-weight: 600;
-          color: white;
-          background: black;
-          transition: .3s;
-        }
-        .button-main-обсуждения:hover {
-          background: white;
-          color: black;
-        }
-
-            .button-регистрация {
-              text-decoration: none;
-              display: inline-block;
-              width: 70%;
-              height: 0%;
-              line-height: 380%;
-              font-family: 'Montserrat', sans-serif;
-              font-size: 52.6%;
-              text-transform: uppercase;
-              text-align: center;
-              letter-spacing: 1px;
-              font-weight: 600;
-              color: white;
-              background: white;
-              transition: .3s;
-            }
-            .button-регистрация:hover {
-              background: white;
-              color: black;
-            }
-            .carousel:hover .carousel__snapper,
-.carousel:focus-within .carousel__snapper {
-  animation-name: none;
-}
-
-.carousel__navigation {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-}
-
-.carousel__navigation-list,
-.carousel__navigation-item {
-  display: inline-block;
-}
-
-.carousel__navigation-button {
-  display: inline-block;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-color: #333;
-  background-clip: content-box;
-  border: 0.25rem solid transparent;
-  border-radius: 50%;
-  font-size: 0;
-  transition: transform 0.1s;
-}
-
-.carousel::before,
-.carousel::after,
-.carousel__prev,
-.carousel__next {
-  position: absolute;
-  top: 0;
-  margin-top: 37.5%;
-  width: 4rem;
-  height: 4rem;
-  transform: translateY(-50%);
-  border-radius: 50%;
-  font-size: 0;
-  outline: 0;
-}
-
-.carousel::before,
-.carousel__prev {
-  left: -1rem;
-}
-
-.carousel::after,
-.carousel__next {
-  right: -1rem;
-}
-
-.carousel::before,
-.carousel::after {
-  content: '';
-  z-index: 1;
-  background-color: #333;
-  background-size: 1.5rem 1.5rem;
-  background-repeat: no-repeat;
-  background-position: center center;
-  color: #fff;
-  font-size: 2.5rem;
-  line-height: 4rem;
-  text-align: center;
-  pointer-events: none;
-}
-
-.carousel::before {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='0,50 80,100 80,0' fill='%23fff'/%3E%3C/svg%3E");
-}
-
-.carousel::after {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='100,50 20,100 20,0' fill='%23fff'/%3E%3C/svg%3E");
-}
-
   </style>
 </head>
 
-<body>
-<div class="wrapper">
+<body style="background-color:#e0e0e0">
+<div style="">
 <header style="width:100%">
       <div  class="navbar-dark shadow-sm navbar" style="background-color:black">
         <div  class="container">
@@ -255,16 +54,15 @@ body,
                 <a href="{% url 'forum:book_list' %}" class = "button-новости-книги" style="margin-left:-1.9%">Книги</a>
             </nobr>
             </div>
-            <span class="d-flex" style="font-size:150.2%;color:white;margin-left:30%"><nobr>
+            <span class="d-flex" style="font-size:150.2%;color:white;margin-left:30%">
                 {% if request.user.is_authenticated %}
-                <a>	<div class="nav-item dropdown">
-				<a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" class="avatar" style="border-radius:50%" alt="Avatar"> Antonio Moreno <b class="caret"></b></a>
+                <div class="nav-item dropdown">
+				<a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle user-action"><img src="{{ user_prof.profile_picture.url }}" class="avatar" style="border-radius:50%;width:60px;height:60px" alt="Avatar"> {{ user_prof.nickname }} <b class="caret"></b></a>
 				<div class="dropdown-menu">
-					<a href="#" class="dropdown-item"><i class="fa fa-user-o"></i> Profile</a>
-					<a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Calendar</a>
-					<a href="#" class="dropdown-item"><i class="fa fa-sliders"></i> Settings</a>
+					<a href="{% url 'forum:profile' request.user.pk %}" class="dropdown-item"><i class="fa fa-user-o"></i> Профиль </a>
+					<a href="#" class="dropdown-item"><i class="fa fa-calendar-o"></i> Ваша библиотека</a>
 					<div class="divider dropdown-divider"></div>
-					<a href="#" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
+					<a href="{% url 'account_logout' %}" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Выйти</a>
 				</div>
 			</div>
                 {% else %}

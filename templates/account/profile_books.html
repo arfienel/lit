@@ -1,16 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
+
 {% if owner %}
 {% for book in books %}
-<img src="{{ book.image.url }}" style="width:300px; height:250px">
-<a href="{% url 'forum:book_detail' book.pk %}">{{ book.title }}</a>
-<br>
+<div style="background-color:white;margin:1% 5% 1% 5%;border-radius:0%; box-shadow: 5px 5px 15px black;height:270px">
+    <a href="{% url 'forum:book_edit' book.pk %}">
+<img src="{{ book.image.url }}" style="float:left;margin:10px;width:250px;height:250px;outline:2px solid black"></a>
+    <div style="">
+        <a href="{% url 'forum:book_edit' book.pk %}" style="font-size:42px;text-decoration: none;color:black">{{ book.title }}</a>
+        <br>
+        <h4>Последнее обновление - {{ book.pub_date }}</h4>
+        <h4>Жанры - {{ book.main_genre }}, {{ book.add_genre_1 }}, {{ book.add_genre_2}}</h4>
+               <form action="{% url 'forum:book_search' %}" method="get">
+        <h4><img src="https://image.flaticon.com/icons/png/512/617/617418.png" style="width:20px;height:20px">
+                {% for tag in book.tags.all %}<button name="search" value="{{ tag.name }}">{{tag.name}}/</button>{% endfor %}</h4>
+                </form>
+        <h4><img src="https://image.flaticon.com/icons/png/512/709/709612.png" style="width:20px; height:20px;"> {{ book.views }}
+        <img src="https://image.flaticon.com/icons/png/512/833/833472.png" style="width:20px; height:20px;"> {{ book.number_of_likes }}</h4>
+    </div>
+    </div>
+
 {% endfor %}
 {% else %}
 {% for book in books %}
+
+<div style="background-color:white;margin:1% 5% 1% 10%;border-radius:2%; box-shadow: 5px 5px 15px black;">
+<a href="{% url 'forum:book_detail' book.pk %}" style="font-size:24px">{{ book.title }}</a>
 <img src="{{ book.image.url }}" style="width:300px; height:250px">
-<a href="{% url 'forum:book_detail' book.pk %}">{{ book.title }}</a>
-<br>
+</div>
 {% endfor %}
 {% endif %}
 

@@ -1,0 +1,223 @@
+body {
+    color:#2A3132;
+      display: grid;
+  grid-template-rows: 1fr auto;
+    background-color: #e0e0e0;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    }
+
+   a {
+    text-decoration: none;
+   }
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+main_page_title{
+background-color:
+}
+
+.gallery {
+  background: #EEE;
+}
+
+.gallery-cell {
+  width: 15%;
+  height: 200px;
+  margin-right: 10px;
+  background: #8C8;
+  counter-increment: gallery-cell;
+}
+
+.content {
+  box-sizing: border-box;
+  min-height: 100%;
+  padding-bottom: 4.68%;
+}
+.footer {
+  position: absolute
+  height: 0%;
+  margin-top: 0%;
+}
+
+.button-новости-книги {
+  text-decoration: none;
+  display: inline-block;
+  width: 45%;
+  height: 0%;
+  line-height: 380%;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 75%;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: white;
+  background: black;
+  transition: .3s;
+}
+.button-новости-книги:hover {
+  background: white;
+  color: black;
+}
+
+    .button-вход {
+      text-decoration: none;
+      display: inline-block;
+      width: 45%;
+      height: 0%;
+      line-height: 380%;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 52%;
+      text-transform: uppercase;
+      text-align: center;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: white;
+      background: black;
+      transition: .3s;
+    }
+    .button-вход:hover {
+      background-color: white;
+      color: black;
+    }
+
+        .button-main-обсуждения {
+          text-decoration: none;
+          display: inline-block;
+          width: 100%;
+          height: 0%;
+          line-height: 380%;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 78%;
+          text-transform: uppercase;
+          text-align: center;
+          letter-spacing: 1px;
+          font-weight: 600;
+          color: white;
+          background: black;
+          transition: .3s;
+        }
+        .button-main-обсуждения:hover {
+          background: white;
+          color: black;
+        }
+
+            .button-регистрация {
+              text-decoration: none;
+              display: inline-block;
+              width: 70%;
+              height: 0%;
+              line-height: 380%;
+              font-family: 'Montserrat', sans-serif;
+              font-size: 52.6%;
+              text-transform: uppercase;
+              text-align: center;
+              letter-spacing: 1px;
+              font-weight: 600;
+              color: white;
+              background: white;
+              transition: .3s;
+            }
+            .button-регистрация:hover {
+              background: white;
+              color: black;
+            }
+      .button-обсуждения {
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      height: 50px;
+      margin-top:1%
+      line-height: 20px;
+      border-radius: 0px;
+      margin-left: 0px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 70%;
+      text-transform: uppercase;
+      text-align: center;
+      letter-spacing: 3px;
+      font-weight: 600;
+      color: black;
+      background: #FDFDFD;
+      transition: .1s;
+    }
+    .button-обсуждения:hover {
+      background: #F2F2F2;
+      color: black;
+      transform: translateY(-2px);
+    }
+
+        .button-книга1 {
+          text-decoration: none;
+          display: inline-block;
+          width: 60px;
+          height: 120px;
+          line-height: 125px;
+          border-radius: 45px;
+          margin: 0px 15px 40px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 25px;
+          text-transform: uppercase;
+          text-align: center;
+          letter-spacing: 3px;
+          font-weight: 600;
+          color: black;
+          background: #FDFDFD;
+          transition: .3s;
+        }
+        .button-книга1:hover {
+          background: #FDFDFD;
+          color: black;
+          transform: translateY(-2px);
+        }
+
+        .button-книга2 {
+          text-decoration: none;
+          display: inline-block;
+          width: 60px;
+          height: 120px;
+          line-height: 125px;
+          border-radius: 45px;
+          margin: 0px 15px 40px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 25px;
+          text-transform: uppercase;
+          text-align: center;
+          letter-spacing: 3px;
+          font-weight: 600;
+          color: black;
+          background: #F2F2F2;
+          transition: .3s;
+        }
+        .button-книга2:hover {
+          background: #F2F2F2;
+          color: black;
+          transform: translateY(-2px);
+        }
+
+            .button-комментарии {
+              text-decoration: none;
+              display: inline-block;
+              width: 159px;
+              height: 50px;
+              line-height: 50px;
+              border-radius: 0px;
+              margin: 0px
+              font-family: 'Montserrat', sans-serif;
+              font-size: 10px;
+              text-transform: uppercase;
+              text-align: center;
+              letter-spacing: 1px;
+              font-weight: 600;
+              color: black;
+              background: #FDFDFD;
+              transition: .3s;
+            }
+            .button-комментарии:hover {
+              background: #F2F2F2;
+              color: black;
+            }
