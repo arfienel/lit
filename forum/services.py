@@ -35,6 +35,23 @@ def comment_func(com_model, post_model, request):
         return redirect(reverse(f'forum:{tip}_detail', args=[post_model.pk]))
 
 
+def views_add(request):
+    options = request.path.split('/')
+    try:
+        options.remove(''), options.remove('')
+    except ValueError:
+        return None
+    if len(options) == 2 and type(options[1]) == int:
+        if options[0] == 'books':
+            obj = Book.objects.get(pk=options[1])
+            obj.views += 1
+            obj.save()
+        if options[0] == 'news':
+            obj = News.objects.get(pk=options[1])
+            obj.views += 1
+            obj.save += 1
+
+
 # функция чтобы узнать пользователь владелец или нет
 def is_owner(request, pk):
     if request.user.pk == pk:
